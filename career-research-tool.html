@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Career Research Tool</title>
+<style>
+  :root{
+    --black:#111111;
+    --gray-900:#2b2b2b;
+    --gray-700:#555;
+    --gray-500:#777;
+    --gray-300:#cfcfcf;
+    --gray-200:#e7e7e7;
+    --gray-100:#f5f5f5;
+    --white:#fff;
+    --yellow:#ffcd00;
+    --focus:#005ea8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--black);background:#fff;line-height:1.5}
+  .wrap{max-width:980px;margin:0 auto;padding:28px 20px 56px}
+  header{border-top:10px solid var(--yellow);padding-top:22px;margin-bottom:26px}
+  h1{font-size:2rem;line-height:1.15;margin:0 0 8px}
+  h2{font-size:1.35rem;margin:0 0 10px}
+  h3{font-size:1.05rem;margin:22px 0 8px}
+  p{margin:8px 0}
+  .lead{font-size:1.05rem;max-width:760px}
+  .card{border:1px solid var(--gray-300);border-radius:10px;padding:20px;margin:18px 0;background:#fff}
+  .tip{background:var(--gray-100);border-left:5px solid var(--black);padding:14px 16px;margin:14px 0}
+  label{font-weight:700;display:block;margin:12px 0 6px}
+  input[type="text"], textarea{width:100%;border:1px solid #999;border-radius:6px;padding:11px;font:inherit;background:#fff}
+  textarea{min-height:82px;resize:vertical}
+  .sources{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:12px}
+  .source{border:1px solid var(--gray-300);border-radius:8px;padding:12px;background:var(--gray-100)}
+  .source strong{display:block;margin-bottom:3px}
+  .resource-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .resource-link{display:inline-block;text-decoration:none;font-weight:700;border:2px solid var(--black);border-radius:7px;padding:9px 12px;background:#fff;color:var(--black)}
+  .resource-link:hover{background:var(--gray-200)}
+  .resource-link:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+  .resource-link.primary-link{background:var(--black);color:#fff}
+  .resource-link.primary-link:hover{background:var(--gray-900)}
+  .resource-group{margin-top:18px;padding-top:16px;border-top:1px solid var(--gray-200)}
+  details.resource-group summary{font-weight:700;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 0}
+  details.resource-group summary::-webkit-details-marker{display:none}
+  details.resource-group summary::after{content:"+";font-size:1.35rem;line-height:1;font-weight:400}
+  details.resource-group[open] summary::after{content:"−"}
+  details.resource-group summary:focus-visible{outline:3px solid var(--focus);outline-offset:4px;border-radius:3px}
+  details.resource-group .sources{margin-top:14px}
+  .rating{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px}
+  .rating input{position:absolute;opacity:0;pointer-events:none}
+  .rating label{margin:0;border:1px solid var(--gray-300);border-radius:7px;padding:10px 8px;text-align:center;font-weight:600;cursor:pointer;background:#fff;min-height:58px;display:flex;align-items:center;justify-content:center}
+  .rating input:checked + label{background:var(--gray-200);border-color:var(--black);box-shadow:inset 0 0 0 1px var(--black)}
+  .rating input:focus-visible + label{outline:3px solid var(--focus);outline-offset:2px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  button{font:inherit;font-weight:700;border-radius:7px;padding:11px 16px;cursor:pointer;border:2px solid var(--black)}
+  .primary{background:var(--black);color:#fff}
+  .secondary{background:#fff;color:var(--black)}
+  button:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+  .hidden{display:none}
+  .summary{border:2px solid var(--black);border-radius:10px;padding:20px;margin-top:18px}
+  .scoregrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
+  .score{background:var(--gray-100);border-radius:8px;padding:12px}
+  .score span{display:block;color:var(--gray-700);font-size:.9rem}
+  .next{margin-top:18px}
+  .next ul{padding-left:20px}
+  .alt-box{background:var(--gray-100);padding:16px;border-radius:8px;margin-top:14px}
+  .small{font-size:.92rem;color:var(--gray-700)}
+  .error{color:#8a1c1c;font-weight:700;margin-top:10px}
+  @media(max-width:720px){.rating{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
+  @media print{
+    header{border-top:none}.btnrow,.source-links{display:none!important}.wrap{max-width:none;padding:0}.card{break-inside:avoid}.summary{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <h1>Career Research Tool</h1>
+    <p class="lead">Explore one career, notice what fits and what does not, and leave with a clear next step.</p>
+  </header>
+
+  <section class="card" aria-labelledby="start-title">
+    <h2 id="start-title">Start with a career</h2>
+    <label for="career">Career or job title</label>
+    <input id="career" type="text" placeholder="Example: School Counselor" />
+
+    <div class="tip"><strong>Use more than one source.</strong> Career information sites show the occupation broadly. Job descriptions show how the work can vary by employer. Use the steps below as you complete the activity.</div>
+
+    <h3>Choose your main research source</h3>
+    <div class="sources">
+      <div class="source">
+        <strong>If you completed YouScience</strong>
+        <span class="small">Start with your YouScience results. Find this career in your results or career information and use it as your main source.</span>
+        <div class="resource-actions"><a class="resource-link primary-link" href="https://careers.uiowa.edu/explore" target="_blank" rel="noopener">Open YouScience Resources</a></div>
+      </div>
+      <div class="source">
+        <strong>If you have not completed YouScience</strong>
+        <span class="small">Use My Next Move, powered by O*NET, as your main source for tasks, skills, preparation, work context, and related occupations.</span>
+        <div class="resource-actions"><a class="resource-link primary-link" href="https://www.mynextmove.org/" target="_blank" rel="noopener">Open My Next Move</a></div>
+      </div>
+    </div>
+
+    <div class="resource-group">
+      <h3>Then check 2–3 real job descriptions</h3>
+      <p>Search the same or a similar job title. You do not need to be ready to apply. Look for responsibilities, skills, qualifications, tools, and requirements that appear more than once.</p>
+      <div class="resource-actions source-links">
+        <a class="resource-link" href="https://uiowa.joinhandshake.com/" target="_blank" rel="noopener">Search Handshake</a>
+        <a class="resource-link" href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener">Search LinkedIn Jobs</a>
+        <a class="resource-link" href="https://www.indeed.com/" target="_blank" rel="noopener">Search Indeed</a>
+      </div>
+    </div>
+
+    <details class="resource-group">
+      <summary>Need another source?</summary>
+      <div class="sources">
+        <div class="source"><strong>Occupational Outlook Handbook</strong><span class="small">Helpful for duties, work environment, education, pay, job outlook, and similar occupations.</span><div class="resource-actions"><a class="resource-link" href="https://www.bls.gov/ooh/" target="_blank" rel="noopener">Open OOH</a></div></div>
+        <div class="source"><strong>CareerOneStop</strong><span class="small">Useful for career profiles, wages, skills, career clusters, and additional ways to explore.</span><div class="resource-actions"><a class="resource-link" href="https://www.careeronestop.org/ExploreCareers/explore-careers.aspx" target="_blank" rel="noopener">Open CareerOneStop</a></div></div>
+        <div class="source"><strong>Pomerantz Career Communities</strong><span class="small">Browse broader career fields and industries, especially if you are not sure which related career to explore next.</span><div class="resource-actions"><a class="resource-link" href="https://careers.uiowa.edu/career-communities" target="_blank" rel="noopener">View Career Communities</a></div></div>
+      </div>
+    </details>
+  </section>
+
+  <form id="researchForm" novalidate>
+    <section class="card section" data-key="work" data-label="Daily work">
+      <h2>1. What would I do?</h2>
+      <p>Review common tasks and responsibilities. Notice what the work seems to involve day to day.</p>
+      <div class="two">
+        <div><label for="workLike">What sounds appealing?</label><textarea id="workLike" placeholder="Tasks, responsibilities, or parts of the work you would enjoy"></textarea></div>
+        <div><label for="workDislike">What sounds less appealing?</label><textarea id="workDislike" placeholder="Tasks or responsibilities you would rather do less often"></textarea></div>
+      </div>
+      <fieldset><legend><strong>How do you feel about the work itself?</strong></legend><div class="rating"></div></fieldset>
+    </section>
+
+    <section class="card section" data-key="skills" data-label="Skills used">
+      <h2>2. Skills & strengths</h2>
+      <p>Look for skills that appear repeatedly across career information and job descriptions.</p>
+      <div class="two">
+        <div><label for="skillsLike">Skills I would enjoy using</label><textarea id="skillsLike" placeholder="Example: problem solving, writing, helping, analysis"></textarea></div>
+        <div><label for="skillsDislike">Skills I would rather use less</label><textarea id="skillsDislike" placeholder="Example: sales, frequent presenting, highly repetitive work"></textarea></div>
+      </div>
+      <fieldset><legend><strong>How do you feel about the skills this career uses?</strong></legend><div class="rating"></div></fieldset>
+    </section>
+
+    <section class="card section" data-key="prep" data-label="Preparation">
+      <h2>3. Education & preparation</h2>
+      <p>Note the education, experience, certifications, licenses, or technical preparation that commonly appears.</p>
+      <label for="prepNotes">What preparation seems common?</label><textarea id="prepNotes" placeholder="Look for patterns across sources rather than one employer's wish list"></textarea>
+      <div class="two">
+        <div><label for="prepLike">What feels manageable or appealing?</label><textarea id="prepLike"></textarea></div>
+        <div><label for="prepDislike">What gives you pause?</label><textarea id="prepDislike"></textarea></div>
+      </div>
+      <fieldset><legend><strong>How do you feel about the preparation required?</strong></legend><div class="rating"></div></fieldset>
+    </section>
+
+    <section class="card section" data-key="environment" data-label="Work environment">
+      <h2>4. Work environment & lifestyle</h2>
+      <p>Consider setting, schedule, pace, amount of interaction, travel, flexibility, and other day-to-day conditions.</p>
+      <div class="two">
+        <div><label for="environmentLike">What fits you?</label><textarea id="environmentLike" placeholder="What would work well for you?"></textarea></div>
+        <div><label for="environmentDislike">What may not fit?</label><textarea id="environmentDislike" placeholder="What might be a drawback?"></textarea></div>
+      </div>
+      <fieldset><legend><strong>How well does this work environment fit what you want?</strong></legend><div class="rating"></div></fieldset>
+    </section>
+
+    <section class="card section" data-key="opportunities" data-label="Opportunities & pay">
+      <h2>5. Opportunities & pay</h2>
+      <p>Review salary information, job outlook, locations, and the types of employers that hire for this work.</p>
+      <div class="two">
+        <div><label for="oppLike">What looks promising?</label><textarea id="oppLike"></textarea></div>
+        <div><label for="oppDislike">What concerns you?</label><textarea id="oppDislike"></textarea></div>
+      </div>
+      <fieldset><legend><strong>How do you feel about the opportunities this career offers?</strong></legend><div class="rating"></div></fieldset>
+    </section>
+
+    <div class="btnrow">
+      <button type="button" class="primary" id="showResults">See My Career Fit Snapshot</button>
+      <button type="reset" class="secondary" id="resetBtn">Start Over</button>
+    </div>
+    <div id="error" class="error" role="alert" aria-live="polite"></div>
+  </form>
+
+  <section id="results" class="summary hidden" aria-live="polite" tabindex="-1">
+    <h2>My Career Fit Snapshot</h2>
+    <p id="careerName"></p>
+    <div id="scoreGrid" class="scoregrid"></div>
+    <p id="overall"></p>
+
+    <div class="next">
+      <h3>Suggested next steps</h3>
+      <div id="nextSteps"></div>
+    </div>
+
+    <div id="betterFit" class="alt-box hidden">
+      <h3>Want to find a career that may fit better?</h3>
+      <p>Use what you disliked as clues. Instead of starting over from scratch, look for careers that keep the parts you liked and reduce the parts you did not.</p>
+      <ul id="betterFitList"></ul>
+      <label for="betterFitPrompt">My better-fit search statement</label>
+      <textarea id="betterFitPrompt" readonly></textarea>
+      <p class="small">Use this statement when exploring YouScience, My Next Move/O*NET, Career Communities, or when searching job titles.</p>
+
+      <h3>Where to explore next</h3>
+      <div class="sources source-links">
+        <div class="source"><strong>Find careers with similar work or skills</strong><span class="small">Use My Next Move/O*NET and look at related occupations.</span><div class="resource-actions"><a class="resource-link" href="https://www.mynextmove.org/" target="_blank" rel="noopener">Explore My Next Move</a></div></div>
+        <div class="source"><strong>Return to your matches</strong><span class="small">If you completed YouScience, revisit your results and look for options that better match the parts you liked.</span><div class="resource-actions"><a class="resource-link" href="https://careers.uiowa.edu/explore" target="_blank" rel="noopener">Open YouScience Resources</a></div></div>
+        <div class="source"><strong>Try a different career area</strong><span class="small">Browse Iowa's Career Communities for career fields, industries, and additional exploration resources.</span><div class="resource-actions"><a class="resource-link" href="https://careers.uiowa.edu/career-communities" target="_blank" rel="noopener">Browse Career Communities</a></div></div>
+        <div class="source"><strong>Compare pay, preparation, or outlook</strong><span class="small">Use the Occupational Outlook Handbook or CareerOneStop to compare alternatives.</span><div class="resource-actions"><a class="resource-link" href="https://www.bls.gov/ooh/" target="_blank" rel="noopener">Open OOH</a><a class="resource-link" href="https://www.careeronestop.org/ExploreCareers/explore-careers.aspx" target="_blank" rel="noopener">Open CareerOneStop</a></div></div>
+      </div>
+    </div>
+
+    <div class="btnrow">
+      <button type="button" class="primary" id="copyResults">Copy My Results</button>
+      <button type="button" class="secondary" id="printResults">Print or Save</button>
+      <button type="button" class="secondary" id="editResearch">Edit My Research</button>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  const labels=["Really like it","Mostly like it","Mixed / unsure","Mostly dislike it","Really dislike it"];
+  const scores=[5,4,3,2,1];
+  document.querySelectorAll('.section').forEach(section=>{
+    const key=section.dataset.key;
+    const box=section.querySelector('.rating');
+    labels.forEach((label,i)=>{
+      const id=key+'-'+scores[i];
+      box.insertAdjacentHTML('beforeend',`<input type="radio" name="${key}" id="${id}" value="${scores[i]}" data-text="${label}"><label for="${id}">${label}</label>`);
+    });
+  });
+
+  const fieldMap={
+    work:['workLike','workDislike'],skills:['skillsLike','skillsDislike'],prep:['prepLike','prepDislike'],environment:['environmentLike','environmentDislike'],opportunities:['oppLike','oppDislike']
+  };
+  const getRating=k=>document.querySelector(`input[name="${k}"]:checked`);
+  const getText=id=>document.getElementById(id).value.trim();
+
+  function buildResults(){
+    const career=getText('career');
+    const sections=[...document.querySelectorAll('.section')];
+    const missing=sections.filter(s=>!getRating(s.dataset.key));
+    const error=document.getElementById('error');
+    if(!career || missing.length){
+      error.textContent=!career ? 'Add a career title and rate each section before viewing your snapshot.' : 'Rate each section before viewing your snapshot.';
+      return;
+    }
+    error.textContent='';
+    const data=sections.map(s=>{const r=getRating(s.dataset.key);return {key:s.dataset.key,label:s.dataset.label,score:Number(r.value),text:r.dataset.text}});
+    const avg=data.reduce((a,b)=>a+b.score,0)/data.length;
+    document.getElementById('careerName').innerHTML=`<strong>Career researched:</strong> ${escapeHtml(career)}`;
+    document.getElementById('scoreGrid').innerHTML=data.map(d=>`<div class="score"><span>${escapeHtml(d.label)}</span><strong>${escapeHtml(d.text)}</strong></div>`).join('');
+
+    let overallText='';
+    if(avg>=4.3) overallText='<strong>Overall:</strong> This career shows a strong fit across the areas you researched. Your next step is to test that interest with deeper research or real-world experience.';
+    else if(avg>=3.5) overallText='<strong>Overall:</strong> Several parts of this career fit, with a few areas worth investigating more closely.';
+    else if(avg>=2.7) overallText='<strong>Overall:</strong> Your reactions are mixed. This is a good point to compare this career with one or two related options.';
+    else overallText='<strong>Overall:</strong> Several parts of this career may not fit what you want. That is useful information—you can use it to search for a better-fit direction.';
+    document.getElementById('overall').innerHTML=overallText;
+
+    const strongest=[...data].sort((a,b)=>b.score-a.score).slice(0,2);
+    const weakest=[...data].sort((a,b)=>a.score-b.score).slice(0,2);
+    const steps=[];
+    if(avg>=4.3){
+      steps.push('Look at 3–5 additional job descriptions to confirm that the parts you like are common across employers.','Identify one experience, course, project, internship, or conversation that could help you test this career in the real world.','Save this career as a strong option and compare it with one related career before deciding what to pursue next.');
+    }else if(avg>=3.5){
+      steps.push(`Investigate your lower-rated area${weakest.length>1?'s':''}: ${weakest.map(x=>x.label).join(' and ')}.`,'Look at more job descriptions to see whether those concerns are common or employer-specific.','Compare this career with a related option that keeps the parts you liked but improves one of the weaker areas.');
+    }else if(avg>=2.7){
+      steps.push(`Keep the parts you rated highest: ${strongest.map(x=>x.label).join(' and ')}.`,'Choose 1–2 related careers and compare them using the same categories.','Search for job titles that use the skills or work you liked without as much of the parts you disliked.');
+    }else{
+      steps.push(`Use your highest-rated areas as clues: ${strongest.map(x=>x.label).join(' and ')}.`,'Return to YouScience or O*NET/My Next Move and explore related occupations rather than forcing this option to fit.','Search job descriptions for roles that include more of what you liked and less of what you disliked.');
+    }
+    document.getElementById('nextSteps').innerHTML='<ul>'+steps.map(s=>`<li>${escapeHtml(s)}</li>`).join('')+'</ul>';
+
+    const better=document.getElementById('betterFit');
+    if(avg<4){
+      better.classList.remove('hidden');
+      const likes=[]; const dislikes=[];
+      Object.keys(fieldMap).forEach(k=>{
+        const [likeId,dislikeId]=fieldMap[k];
+        const like=getText(likeId), dislike=getText(dislikeId);
+        if(like) likes.push(like);
+        if(dislike) dislikes.push(dislike);
+      });
+      const bf=[];
+      if(likes.length) bf.push('Look for careers that include more of: '+likes.slice(0,3).join('; '));
+      if(dislikes.length) bf.push('Look for careers with less of: '+dislikes.slice(0,3).join('; '));
+      bf.push('Use related occupations in O*NET/My Next Move or your YouScience career results to generate alternatives.');
+      bf.push('Open a few job descriptions for each alternative and compare the same five areas again.');
+      document.getElementById('betterFitList').innerHTML=bf.map(x=>`<li>${escapeHtml(x)}</li>`).join('');
+      const search=`I am looking for careers with more of ${likes.length?likes.slice(0,2).join(' and '):strongest.map(x=>x.label).join(' and ')}, and less of ${dislikes.length?dislikes.slice(0,2).join(' and '):weakest.map(x=>x.label).join(' and ')}.`;
+      document.getElementById('betterFitPrompt').value=search;
+    }else better.classList.add('hidden');
+
+    const results=document.getElementById('results');
+    results.classList.remove('hidden');
+    results.focus();
+    results.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  function resultsText(){
+    const career=getText('career');
+    let out=`Career Research Tool\nCareer researched: ${career}\n\n`;
+    document.querySelectorAll('.section').forEach(s=>{
+      const key=s.dataset.key; const r=getRating(key);
+      out+=`${s.dataset.label}: ${r?r.dataset.text:'Not rated'}\n`;
+      const ids=fieldMap[key];
+      if(ids){ const like=getText(ids[0]), dislike=getText(ids[1]); if(like) out+=`What I like: ${like}\n`; if(dislike) out+=`What I like less: ${dislike}\n`; }
+      if(key==='prep' && getText('prepNotes')) out+=`Preparation I noticed: ${getText('prepNotes')}\n`;
+      out+='\n';
+    });
+    out+='Suggested next steps:\n';
+    document.querySelectorAll('#nextSteps li').forEach(li=>out+='- '+li.textContent+'\n');
+    const p=document.getElementById('betterFitPrompt').value;
+    if(p) out+='\nBetter-fit search statement:\n'+p+'\n';
+    return out;
+  }
+
+  function escapeHtml(str){return String(str).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+
+  document.getElementById('showResults').addEventListener('click',buildResults);
+  document.getElementById('copyResults').addEventListener('click',async()=>{
+    const btn=document.getElementById('copyResults');
+    try{await navigator.clipboard.writeText(resultsText());btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy My Results',1500)}catch(e){btn.textContent='Select and copy manually';}
+  });
+  document.getElementById('printResults').addEventListener('click',()=>window.print());
+  document.getElementById('editResearch').addEventListener('click',()=>{document.querySelector('.section').scrollIntoView({behavior:'smooth'});});
+  document.getElementById('resetBtn').addEventListener('click',()=>{document.getElementById('results').classList.add('hidden');document.getElementById('error').textContent='';setTimeout(()=>document.getElementById('career').focus(),0);});
+})();
+</script>
+</body>
+</html>
