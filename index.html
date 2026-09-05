@@ -1,3 +1,37 @@
+Done — the tool now includes the initial research resources inside the activity and a separate set of next-step resources for students who want to explore a better-fit career.
+
+At the beginning, students now see:
+
+YouScience if they already completed it
+My Next Move/O*NET if they have not
+A prompt to review 2–3 actual job descriptions, with links to Handshake, LinkedIn Jobs, and Indeed
+Optional supporting resources: Occupational Outlook Handbook, CareerOneStop, and Iowa Career Communities
+
+At the end, the better-fit section now directs them to the right resource depending on what they want to do next—find related careers, revisit YouScience matches, explore another career area, or compare preparation/pay/outlook. The Occupational Outlook Handbook is particularly useful here because its profiles consistently cover duties, work environment, preparation, pay, outlook, and similar occupations.
+
+Download the updated Career Research Tool
+
+career-research-tool.html
+HTML
+need another source collapsable
+
+Done. “Need another source?” is now collapsed by default with a simple + / – control, so students first see only the main research path.
+
+Download the updated Career Research Tool
+
+career-research-tool.html
+HTML
+add start over, highlight print button instead of copy
+
+Done.
+
+Print or Save is now the highlighted black primary button
+Copy My Results is secondary
+Start Over is available on the final results page and clears the activity to begin again
+The existing earlier Start Over remains in place too
+
+Download the updated Career Research Tool
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -210,9 +244,10 @@
     </div>
 
     <div class="btnrow">
-      <button type="button" class="primary" id="copyResults">Copy My Results</button>
-      <button type="button" class="secondary" id="printResults">Print or Save</button>
+      <button type="button" class="primary" id="printResults">Print or Save</button>
+      <button type="button" class="secondary" id="copyResults">Copy My Results</button>
       <button type="button" class="secondary" id="editResearch">Edit My Research</button>
+      <button type="button" class="secondary" id="finalResetBtn">Start Over</button>
     </div>
   </section>
 </main>
@@ -325,8 +360,12 @@
   });
   document.getElementById('printResults').addEventListener('click',()=>window.print());
   document.getElementById('editResearch').addEventListener('click',()=>{document.querySelector('.section').scrollIntoView({behavior:'smooth'});});
+  const startOver=()=>{document.getElementById('researchForm').reset();document.getElementById('results').classList.add('hidden');document.getElementById('error').textContent='';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>document.getElementById('career').focus(),350);};
   document.getElementById('resetBtn').addEventListener('click',()=>{document.getElementById('results').classList.add('hidden');document.getElementById('error').textContent='';setTimeout(()=>document.getElementById('career').focus(),0);});
+  document.getElementById('finalResetBtn').addEventListener('click',startOver);
 })();
 </script>
 </body>
 </html>
+career-research-tool.html
+HTML
