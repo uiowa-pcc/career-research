@@ -91,18 +91,36 @@
   .alt-box{background:var(--white);border:1px solid var(--gray-200);padding:16px;border-radius:10px;margin-top:18px}
   .small{font-size:.9rem;color:var(--muted)}
   .error{color:#8a1c1c;font-weight:700;margin-top:10px}
+  .progress-wrap{margin:6px 0 18px}
+  .progress-meta{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px;font-size:.92rem;color:var(--muted)}
+  .progress-meta strong{color:var(--black)}
+  .progress-track{height:8px;background:var(--gray-100);border-radius:999px;overflow:hidden}
+  .progress-bar{height:100%;background:var(--black);width:0;transition:width .2s ease}
+  .step-panel{display:none}
+  .step-panel.active{display:block}
+  .step-kicker{font-size:.9rem;font-weight:700;color:var(--muted);margin-bottom:6px}
+  .step-nav{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:22px}
+  .step-nav .right{display:flex;gap:10px;margin-left:auto}
+  .step-nav button{min-width:112px}
   @media(max-width:700px){
     .rating,.two,.reaction-grid{grid-template-columns:1fr}
     .wrap{padding:20px 14px 42px}
     .btnrow{align-items:stretch}
     .btnrow button{min-height:44px}
+    .step-nav{align-items:stretch}
+    .step-nav,.step-nav .right{flex-direction:column}
+    .step-nav .right{margin-left:0}
+    .step-nav button{width:100%;min-height:46px}
   }
   @media print{
-    .skip,.btnrow,.source-links{display:none!important}
+    .skip,.btnrow,.step-nav,.progress-wrap,.source-links{display:none!important}
+    .step-panel{display:block!important}
     .wrap{max-width:none;padding:0}
     .card,.summary,.score{box-shadow:none;break-inside:avoid}
     a{color:#111;text-decoration:none}
   }
+
+  .start-next { margin-top: 24px; }
 </style>
 </head>
 <body>
@@ -113,7 +131,13 @@
     <p class="lead">Explore one career, notice what fits and what does not, and leave with a clear next step.</p>
   </div>
 
-  <section class="card" aria-labelledby="start-title">
+  <form id="researchForm" novalidate>
+    <div class="progress-wrap" aria-label="Activity progress">
+      <div class="progress-meta"><strong id="progressLabel">Start</strong><span id="progressCount">1 of 6</span></div>
+      <div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+    </div>
+
+  <section class="card step-panel active" data-step-title="Start" aria-labelledby="start-title">
     <h2 id="start-title">Start with a career</h2>
     <label for="career">Career or job title</label>
     <input id="career" type="text" placeholder="Example: School Counselor" />
@@ -152,10 +176,11 @@
         <div class="source"><strong>Pomerantz Career Communities</strong><span class="small">Browse broader career fields and industries, especially if you are not sure which related career to explore next.</span><div class="resource-actions"><a class="resource-link" href="https://careers.uiowa.edu/career-communities" target="_blank" rel="noopener">View Career Communities</a></div></div>
       </div>
     </details>
+
+    <div class="tip start-next"><strong>Ready to begin?</strong> You do not need to finish all of your research before continuing. Keep your sources open and use them as you work through the next sections.</div>
   </section>
 
-  <form id="researchForm" novalidate>
-    <section class="card section" data-key="work" data-label="Daily work">
+    <section class="card section step-panel" data-step-title="Daily work" data-key="work" data-label="Daily work">
       <h2>1. What would I do?</h2>
       <p>Use your sources to notice the tasks and responsibilities that show up most often. Select anything that stands out.</p>
       <div class="reaction-grid">
@@ -165,7 +190,7 @@
       <fieldset><legend><strong>Overall, how do you feel about the work itself?</strong></legend><div class="rating"></div></fieldset>
     </section>
 
-    <section class="card section" data-key="skills" data-label="Skills used">
+    <section class="card section step-panel" data-step-title="Skills" data-key="skills" data-label="Skills used">
       <h2>2. Skills & strengths</h2>
       <p>Look across the career profile and job descriptions for skills that appear repeatedly.</p>
       <div class="reaction-grid">
@@ -175,7 +200,7 @@
       <fieldset><legend><strong>Overall, how do you feel about the skills this career uses?</strong></legend><div class="rating"></div></fieldset>
     </section>
 
-    <section class="card section" data-key="prep" data-label="Preparation">
+    <section class="card section step-panel" data-step-title="Preparation" data-key="prep" data-label="Preparation">
       <h2>3. Education & preparation</h2>
       <p>Notice what employers commonly require—not every item listed in one posting.</p>
       <div class="reaction-grid">
@@ -185,7 +210,7 @@
       <fieldset><legend><strong>Overall, how do you feel about the preparation required?</strong></legend><div class="rating"></div></fieldset>
     </section>
 
-    <section class="card section" data-key="environment" data-label="Work environment">
+    <section class="card section step-panel" data-step-title="Work environment" data-key="environment" data-label="Work environment">
       <h2>4. Work environment & lifestyle</h2>
       <p>Use the career profile and job descriptions to picture where, when, and how the work happens.</p>
       <div class="reaction-grid">
@@ -195,7 +220,7 @@
       <fieldset><legend><strong>Overall, how well does the work environment fit what you want?</strong></legend><div class="rating"></div></fieldset>
     </section>
 
-    <section class="card section" data-key="opportunities" data-label="Opportunities & pay">
+    <section class="card section step-panel" data-step-title="Opportunities & pay" data-key="opportunities" data-label="Opportunities & pay">
       <h2>5. Opportunities & pay</h2>
       <p>Check pay, outlook, locations, and the types of employers that hire for this work.</p>
       <div class="reaction-grid">
@@ -203,18 +228,13 @@
         <div class="reaction-box"><h3>What concerns me</h3><p class="small">Select anything you may want to investigate further.</p><div class="choice-list less-list" data-key="opportunities"></div></div>
       </div>
       <fieldset><legend><strong>Overall, how do you feel about the opportunities this career offers?</strong></legend><div class="rating"></div></fieldset>
+      <div class="resource-group">
+        <label for="standout">What stood out most as you researched this career? <span class="small">(optional)</span></label>
+        <textarea id="standout" placeholder="A quick note is enough."></textarea>
+      </div>
     </section>
 
-    <section class="card">
-      <h2>One last thought</h2>
-      <label for="standout">What stood out most as you researched this career? <span class="small">(optional)</span></label>
-      <textarea id="standout" placeholder="A quick note is enough."></textarea>
-    </section>
 
-    <div class="btnrow">
-      <button type="button" class="primary" id="showResults">See My Career Fit Snapshot</button>
-      <button type="reset" class="secondary" id="resetBtn">Start Over</button>
-    </div>
     <div id="error" class="error" role="alert" aria-live="polite"></div>
   </form>
 
@@ -309,6 +329,61 @@
     });
   });
 
+  const panels=[...document.querySelectorAll('.step-panel')];
+  const progressLabel=document.getElementById('progressLabel');
+  const progressCount=document.getElementById('progressCount');
+  const progressBar=document.getElementById('progressBar');
+  let currentStep=0;
+
+  panels.forEach((panel,index)=>{
+    const nav=document.createElement('div');
+    nav.className='step-nav';
+    const left=index>0?'<button type="button" class="secondary prev-step">Back</button>':'';
+    const nextLabel=index===panels.length-1?'See My Career Fit Snapshot':(index===0?'Start Career Fit Check':'Continue');
+    nav.innerHTML=`${left}<div class="right"><button type="button" class="primary next-step">${nextLabel}</button></div>`;
+    panel.appendChild(nav);
+  });
+
+  function updateProgress(){
+    const panel=panels[currentStep];
+    panels.forEach((p,i)=>p.classList.toggle('active',i===currentStep));
+    progressLabel.textContent=panel.dataset.stepTitle||`Step ${currentStep+1}`;
+    progressCount.textContent=`${currentStep+1} of ${panels.length}`;
+    progressBar.style.width=`${((currentStep+1)/panels.length)*100}%`;
+    window.scrollTo({top:0,behavior:'smooth'});
+    setTimeout(()=>{const h=panel.querySelector('h2, h1, input, button'); if(h) h.focus?.({preventScroll:true});},250);
+  }
+
+  function validateStep(index){
+    const panel=panels[index];
+    const error=document.getElementById('error');
+    error.textContent='';
+    if(index===0 && !document.getElementById('career').value.trim()){
+      error.textContent='Add a career or job title before continuing.';
+      document.getElementById('career').focus();
+      return false;
+    }
+    if(panel.classList.contains('section')){
+      const key=panel.dataset.key;
+      if(!document.querySelector(`input[name="${key}"]:checked`)){
+        error.textContent='Choose an overall rating for this section before continuing.';
+        panel.querySelector('.rating label')?.focus();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  document.addEventListener('click',e=>{
+    if(e.target.classList.contains('next-step')){
+      if(!validateStep(currentStep)) return;
+      if(currentStep===panels.length-1){ buildResults(); return; }
+      currentStep++; updateProgress();
+    }
+    if(e.target.classList.contains('prev-step')){ currentStep=Math.max(0,currentStep-1); updateProgress(); }
+    if(e.target.classList.contains('restart-step')) startOver();
+  });
+
   const getRating=k=>document.querySelector(`input[name="${k}"]:checked`);
   const getText=id=>document.getElementById(id).value.trim();
   const selected=(key,kind)=>{
@@ -375,6 +450,8 @@
     }else better.classList.add('hidden');
 
     const results=document.getElementById('results');
+    document.getElementById('researchForm').classList.add('hidden');
+    document.querySelector('.progress-wrap').classList.add('hidden');
     results.classList.remove('hidden');
     results.focus();
     results.scrollIntoView({behavior:'smooth',block:'start'});
@@ -401,16 +478,15 @@
 
   function escapeHtml(str){return String(str).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 
-  document.getElementById('showResults').addEventListener('click',buildResults);
   document.getElementById('copyResults').addEventListener('click',async()=>{
     const btn=document.getElementById('copyResults');
     try{await navigator.clipboard.writeText(resultsText());btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy My Results',1500)}catch(e){btn.textContent='Select and copy manually';}
   });
   document.getElementById('printResults').addEventListener('click',()=>window.print());
-  document.getElementById('editResearch').addEventListener('click',()=>{document.querySelector('.section').scrollIntoView({behavior:'smooth'});});
-  const startOver=()=>{document.getElementById('researchForm').reset();document.getElementById('career').value='';document.getElementById('standout').value='';document.querySelectorAll('.other-input').forEach(el=>{el.value='';el.classList.add('hidden');});document.getElementById('results').classList.add('hidden');document.getElementById('error').textContent='';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>document.getElementById('career').focus(),350);};
-  document.getElementById('resetBtn').addEventListener('click',()=>{document.getElementById('results').classList.add('hidden');document.getElementById('error').textContent='';setTimeout(()=>document.getElementById('career').focus(),0);});
+  document.getElementById('editResearch').addEventListener('click',()=>{document.getElementById('results').classList.add('hidden');document.getElementById('researchForm').classList.remove('hidden');document.querySelector('.progress-wrap').classList.remove('hidden');currentStep=1;updateProgress();});
+  function startOver(){document.getElementById('researchForm').reset();document.getElementById('career').value='';document.getElementById('standout').value='';document.querySelectorAll('.other-input').forEach(el=>{el.value='';el.classList.add('hidden');});document.getElementById('results').classList.add('hidden');document.getElementById('researchForm').classList.remove('hidden');document.querySelector('.progress-wrap').classList.remove('hidden');document.getElementById('error').textContent='';currentStep=0;updateProgress();setTimeout(()=>document.getElementById('career').focus(),350);}
   document.getElementById('finalResetBtn').addEventListener('click',startOver);
+  updateProgress();
 })();
 </script>
 </body>
